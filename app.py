@@ -16,9 +16,9 @@ def paramets():
     name=request.args.get('name')
     age=int(request.args.get('age'))
     if age < 18:
-        return jsonify(msg=f"sorry you{name}are not old enough") , 401
+        return jsonify(msg=f"sorry {name} you are not old enough") , 401
     else:
-        return jsonify(msg=f"welcome{name}"), 200
+        return jsonify(msg=f"welcome {name}"), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
