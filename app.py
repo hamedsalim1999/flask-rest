@@ -12,11 +12,21 @@ db= SQLAlchemy(app)
 
 
 # models
+@app.cli.command('db_create')
+def db_create():
+    db.create_all()
+    print("data base is create")
+
+
+@app.cli.command('db_drop')
+def db_drop():
+    db.drop_all()
+    print("data base is drop")
+
 class User(db.Model):
-    __tablename__='user'
-    id = db.Column(Integer, primary_key=True)
-    name = db.Column(String)
-    age = db.Column(Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    age = db.Column(db.Integer)
 
 
 # view functions 
@@ -48,6 +58,8 @@ def paramets_st(name: str,age: int):
     else:
 
         return jsonify(msg=f"welcome {name}"), 200
+
+
 
 
 if __name__ == '__main__':
