@@ -50,7 +50,7 @@ def paramets_dy ():
         return jsonify(msg=f"welcome {name}"), 200
 
 
-@app.route('/url/<string:name>/<int:age>')
+@app.route('/url/<string:name>/<int:age>',methods=['GET','POST'])
 def paramets_st(name: str,age: int):
 
     if age < 18:
