@@ -7,10 +7,17 @@ import os
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(basedir,'mydb.db')}"
+
 db= SQLAlchemy(app)
 
 
 # models
+class User(db.Model):
+    __tablename__='user'
+    id = db.Column(Integer, primary_key=True)
+    name = db.Column(String)
+    age = db.Column(Integer)
+
 
 # view functions 
 @app.route('/')
@@ -39,6 +46,7 @@ def paramets_st(name: str,age: int):
     if age < 18:
         return jsonify(msg=f"sorry {name} you are not old enough") , 401
     else:
+
         return jsonify(msg=f"welcome {name}"), 200
 
 
