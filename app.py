@@ -1,6 +1,18 @@
 from flask import Flask,jsonify,request
-app = Flask(__name__)
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column , Integer , String , Float
+import os
 
+# config
+app = Flask(__name__)
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(basedir,'mydb.db')}"
+db= SQLAlchemy(app)
+
+
+# models
+
+# view functions 
 @app.route('/')
 def main_page():
     return jsonify(msg="hello it's me"), 200
