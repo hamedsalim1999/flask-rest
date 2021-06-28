@@ -56,7 +56,9 @@ def paramets_st(name: str,age: int):
     if age < 18:
         return jsonify(msg=f"sorry {name} you are not old enough") , 401
     else:
-
+        data = User(name=name,age=age)
+        db.session.add(data)
+        db.session.commit()
         return jsonify(msg=f"welcome {name}"), 200
 
 
