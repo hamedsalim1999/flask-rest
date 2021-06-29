@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column , Integer , String , Float
 from flask_marshmallow import Marshmallow
 from flask_jwt_extended import JWTManager,jwt_required,create_access_token
+from flask_mail import Mail , Message
 import os
 
 # config
@@ -10,6 +11,7 @@ app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = "2Hk8q_YjpSzxLyXjA" 
 jwt = JWTManager(app)
 ma = Marshmallow(app)
+mail = Mail(app)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(basedir,'mydb.db')}"
 db= SQLAlchemy(app)
