@@ -2,10 +2,13 @@ from flask import Flask,jsonify,request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column , Integer , String , Float
 from flask_marshmallow import Marshmallow
+from flask_jwt_extended import JWTManager,jwt_required,create_access_token
 import os
 
 # config
 app = Flask(__name__)
+app.config["JWT_SECRET_KEY"] = "2Hk8q_YjpSzxLyXjA" 
+jwt = JWTManager(app)
 ma = Marshmallow(app)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(basedir,'mydb.db')}"
@@ -77,7 +80,7 @@ def return_data():
     return jsonify(result)
 
 
-@app.route('/login',methods=['POST'])
+@app.route('/register',methods=['POST'])
 def register():
     name = request.form['name']
     test = User.query.filter_by(name=name).first()
@@ -90,6 +93,22 @@ def register():
         db.session.commit()
         return jsonify (msg="user crate"),201
 
-        
+
+@app.route('/login',methods=['POST'])
+def login():
+    if request.is_json:
+        name = request.json['name']
+        age = request.json['age']
+
+    else :
+        name = request.form['name']
+        age = request.form['age']
+    
+    test = User.query.filter_by(name= name , age = age ).first()
+    if test :
+        acess_token = create_access_token(identity=name)
+        return jsonify(msg="log in ",acess_token=acess_token)
+    else:
+        return jsonify(msg='your name is wrong')
 if __name__ == '__main__':
     app.run(debug=True)
