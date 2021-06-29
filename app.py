@@ -67,7 +67,10 @@ def paramets_dy ():
     if age < 18:
         return jsonify(msg=f"sorry {name} you are not old enough") , 401
     else:
-        return jsonify(msg=f"welcome {name}"), 200
+        data = User(name=name,age=age,email=email)
+        db.session.add(data)
+        db.session.commit()
+        return jsonify(msg=f"welcome {name}"), 201
 
 
 @app.route('/url/<string:name>/<string:email>/<int:age>',methods=['GET','POST'])
