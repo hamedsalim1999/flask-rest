@@ -77,5 +77,19 @@ def return_data():
     return jsonify(result)
 
 
+@app.route('/login',methods=['POST'])
+def register():
+    name = request.form['name']
+    test = User.query.filter_by(name=name).first()
+    if test :
+        return jsonify (msg="that user alredy exists"),409
+    else :
+        age = request.form['age']
+        user = User(name=name,age=age)
+        db.session.add(user)
+        db.session.commit()
+        return jsonify (msg="user crate"),201
+
+        
 if __name__ == '__main__':
     app.run(debug=True)
