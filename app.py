@@ -1,13 +1,14 @@
 from flask import Flask,jsonify,request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column , Integer , String , Float
+from flask_marshmallow import Marshmallow
 import os
 
 # config
 app = Flask(__name__)
+ma = Marshmallow(app)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(basedir,'mydb.db')}"
-
 db= SQLAlchemy(app)
 
 
@@ -28,7 +29,15 @@ class User(db.Model):
     name = db.Column(db.String(80))
     age = db.Column(db.Integer)
 
-
+class UserSchema(ma.Schema):
+    class Meta:
+        fields = (
+            'id',
+            'name',
+            'age',
+        )
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
 # view functions 
 @app.route('/')
 def main_page():
@@ -61,7 +70,11 @@ def paramets_st(name: str,age: int):
         db.session.commit()
         return jsonify(msg=f"welcome {name}"), 200
 
-
+@app.route('/result',methods=['GET'])
+def return_data():
+    data = User.query.all()
+    result = users_schema.dump(data)
+    return jsonify(result)
 
 
 if __name__ == '__main__':
