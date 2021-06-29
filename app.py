@@ -15,6 +15,9 @@ mail = Mail(app)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(basedir,'mydb.db')}"
 db= SQLAlchemy(app)
+app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
+app.config['MAIL_USERNAME'] = '2ecb1b755afaab'
+app.config['MAIL_PASSWORD'] = 'b0ab42c064749b'
 
 
 # models
@@ -31,6 +34,7 @@ def db_drop():
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(180), unique=True, nullable=False)
     name = db.Column(db.String(80))
     age = db.Column(db.Integer)
 
@@ -40,6 +44,7 @@ class UserSchema(ma.Schema):
             'id',
             'name',
             'age',
+            'email',
         )
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
@@ -56,6 +61,7 @@ def not_found():
 
 @app.route('/paramerts')
 def paramets_dy ():
+    email=request.args.get('email')
     name=request.args.get('name')
     age=int(request.args.get('age'))
     if age < 18:
@@ -64,13 +70,13 @@ def paramets_dy ():
         return jsonify(msg=f"welcome {name}"), 200
 
 
-@app.route('/url/<string:name>/<int:age>',methods=['GET','POST'])
-def paramets_st(name: str,age: int):
+@app.route('/url/<string:name>/<string:email>/<int:age>',methods=['GET','POST'])
+def paramets_st(name: str,age: int,email:str):
 
     if age < 18:
         return jsonify(msg=f"sorry {name} you are not old enough") , 401
     else:
-        data = User(name=name,age=age)
+        data = User(name=name,age=age,email=email)
         db.session.add(data)
         db.session.commit()
         return jsonify(msg=f"welcome {name}"), 200
@@ -99,18 +105,22 @@ def register():
 @app.route('/login',methods=['POST'])
 def login():
     if request.is_json:
-        name = request.json['name']
         age = request.json['age']
-
+        email = request.json['email']
     else :
-        name = request.form['name']
+        email = request.form['email']
         age = request.form['age']
     
-    test = User.query.filter_by(name= name , age = age ).first()
+    test = User.query.filter_by(email= email , age = age ).first()
     if test :
-        acess_token = create_access_token(identity=name)
+        acess_token = create_access_token(identity=email)
         return jsonify(msg="log in ",acess_token=acess_token)
     else:
         return jsonify(msg='your name is wrong')
+
+
+# @app.route('/retrive/',methods=['POST'])
+# def 
+
 if __name__ == '__main__':
     app.run(debug=True)
