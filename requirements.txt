@@ -1,6 +1,7 @@
 click==8.0.1
 colorama==0.4.4
 Flask==2.0.1
+Flask-JWT-Extended==4.2.1
 Flask-Login==0.5.0
 flask-marshmallow==0.14.0
 Flask-SQLAlchemy==2.5.1
@@ -10,6 +11,7 @@ itsdangerous==2.0.1
 Jinja2==3.0.1
 MarkupSafe==2.0.1
 marshmallow==3.12.1
+PyJWT==2.1.0
 six==1.16.0
 SQLAlchemy==1.4.19
 typing-extensions==3.10.0.0
