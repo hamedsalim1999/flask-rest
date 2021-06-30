@@ -165,5 +165,21 @@ def send_data():
         return jsonify (msg="user crate"),201
 
 
+@app.route('/update_data',methods=['PUT'])
+@jwt_required()
+def update_data():
+    user_id = request.form['id']
+    data = User.query.filter_by(id=user_id).first()
+    if data :
+        data.email=request.form['email']
+        data.name=request.form['name']
+        data.age=int(request.form['age'])
+        db.session.commit()
+        return jsonify(msg='your data was update'),201
+    else:
+
+        return jsonify (msg="we dont have your data"),404
+
+
 if __name__ == '__main__':
     app.run(debug=True)
