@@ -135,5 +135,14 @@ def retrive(email : str):
         return jsonify(msg="password was send")
     else:
         return jsonify(msg="your email not exiest")
+@app.route('/get/<int:id>')
+def get_by_id(id: int):
+    data = User.query.filter_by(id=id).first()
+    if data:
+        result = user_schema.dump(data)
+        return jsonify(result) , 200
+    else:
+        return jsonify(msg="we don't have this id ") ,404
+
 if __name__ == '__main__':
     app.run(debug=True)
