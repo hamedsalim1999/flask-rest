@@ -144,5 +144,23 @@ def get_by_id(id: int):
     else:
         return jsonify(msg="we don't have this id ") ,404
 
+
+@app.route('/senddata',methods=['POST'])
+def send_data():
+    email = request.form['email']
+    data = User.query.filter_by(email=email).first()
+    if data :
+        return jsonify(msg='this email dos exist'),409
+    else:
+        name=request.form['name']
+        age=int(request.form['age'])
+        new_user = User(
+                email=email,
+                name=name,
+                age=age,
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify (msg="user crate"),201
 if __name__ == '__main__':
     app.run(debug=True)
