@@ -5,21 +5,25 @@ from flask_marshmallow import Marshmallow
 from flask_jwt_extended import JWTManager,jwt_required,create_access_token
 from flask_mail import Mail , Message
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # config
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = "2Hk8q_YjpSzxLyXjA" 
 jwt = JWTManager(app)
 ma = Marshmallow(app)
-mail = Mail(app)
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(basedir,'mydb.db')}"
 db= SQLAlchemy(app)
-app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
-app.config['MAIL_USERNAME'] = '2ecb1b755afaab'
-app.config['MAIL_PASSWORD'] = 'b0ab42c064749b'
-
-
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = os.environ['MAIL_USERNAME']
+app.config['MAIL_PASSWORD'] = os.environ['MAIL_PASSWORD']
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 # models
 @app.cli.command('db_create')
 def db_create():
@@ -122,8 +126,14 @@ def login():
         return jsonify(msg='your name is wrong')
 
 
-# @app.route('/retrive/',methods=['POST'])
-# def 
-
+@app.route('/retrive/<string:email>',methods=['GET'])
+def retrive(email : str):
+    user = User.query.filter_by(email=email).first()
+    if user :
+        msg = Message(f"your age is {user.age}",sender=os.environ['MAIL_USERNAME'],recipients=[email])
+        mail.send(msg)
+        return jsonify(msg="password was send")
+    else:
+        return jsonify(msg="your email not exiest")
 if __name__ == '__main__':
     app.run(debug=True)
