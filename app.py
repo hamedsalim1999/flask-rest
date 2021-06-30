@@ -146,6 +146,7 @@ def get_by_id(id: int):
 
 
 @app.route('/senddata',methods=['POST'])
+@jwt_required()
 def send_data():
     email = request.form['email']
     data = User.query.filter_by(email=email).first()
@@ -162,5 +163,7 @@ def send_data():
         db.session.add(new_user)
         db.session.commit()
         return jsonify (msg="user crate"),201
+
+
 if __name__ == '__main__':
     app.run(debug=True)
