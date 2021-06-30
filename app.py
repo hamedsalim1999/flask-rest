@@ -181,5 +181,18 @@ def update_data():
         return jsonify (msg="we dont have your data"),404
 
 
+@app.route('/delete',methods=['DELETE'])
+@jwt_required()
+def delete_data():
+    user_id = request.form['id']
+    data = User.query.filter_by(id=user_id).first()
+    if data :
+        db.session.delete(data)
+        db.session.commit()
+        return jsonify(msg='your data was deleted'),201
+    else:
+
+        return jsonify (msg="we dont have your data"),404
+
 if __name__ == '__main__':
     app.run(debug=True)
