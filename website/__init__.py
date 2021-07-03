@@ -1,8 +1,8 @@
-from flask import Flask,jsonify,request
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from flask_jwt_extended import JWTManager,jwt_required,create_access_token
-from flask_mail import Mail , Message
+from flask_jwt_extended import JWTManager
+from flask_mail import Mail 
 import os
 from dotenv import load_dotenv 
 
