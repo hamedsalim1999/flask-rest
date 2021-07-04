@@ -3,12 +3,19 @@ from flask_restful import Api , Resource
 
 app = Flask(__name__)
 api = Api(app)
-
+datas=[]
 class Student(Resource):
-    def get(self,name):
-        return{"Student":name}
 
-api.add_resource(Student , '/<string:name>')
+    def get(self,name):
+        for i in datas:
+            if i['name'] == name:
+                return name
+        # return{"Student":name}
+    def post(self,name):
+        data = {}
+        datas.append({'name':name})
+        return datas
+api.add_resource(Student , '/item/<string:name>')
 
 if __name__ == '__main__':
     app.run(debug=True)
