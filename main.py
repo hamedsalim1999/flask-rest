@@ -9,12 +9,16 @@ class Student(Resource):
     def get(self,name):
         for i in datas:
             if i['name'] == name:
-                return name
+                return name , 200
+            
+        return {'items' : None} , 404
         # return{"Student":name}
     def post(self,name):
         data = {}
         datas.append({'name':name})
-        return datas
+        return datas , 201
+
+        
 api.add_resource(Student , '/item/<string:name>')
 
 if __name__ == '__main__':
