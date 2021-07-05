@@ -28,7 +28,14 @@ class Student(Resource):
         data = request.get_json()
         datas.append({'name':name,'price':data['price']})
         return datas , 201
-
+    def delete(self,name):
+        item = next(filter(lambda x : x['name'] == name , datas),None) 
+        if item:
+            datas.remove(item)
+            return f"items was deleted"
+        else:
+            return "we dont have this item "
+  
 api.add_resource(ItemList,'/items')
 api.add_resource(Student , '/item/<string:name>')
 
