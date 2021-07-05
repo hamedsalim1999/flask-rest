@@ -3,6 +3,7 @@ from flask_restful import Api , Resource
 
 app = Flask(__name__)
 api = Api(app)
+app.config['SECRET_KEY'] ='thisissecret'
 datas=[]
 
 class ItemList(Resource):
