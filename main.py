@@ -16,6 +16,13 @@ class ItemList(Resource):
         pass
 
 class Student(Resource):
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('price',
+        type=float,
+        required=True,
+        help="this field not can be blank"
+        )
     @jwt_required()
     def get(self,name):
         item = next(filter(lambda x : x['name'] == name , datas),None) 
@@ -36,14 +43,8 @@ class Student(Resource):
         else:
             return "we dont have this item "
     def put(self,name):
-        parser = reqparse.RequestParser()
-        parser.add_argument('price',
-        type=float,
-        required=True,
-        help="this field not can be blank"
-        )
         item = next(filter(lambda x : x['name'] == name , datas),None) 
-        data = parser.parse_args()
+        data = self.parser.parse_args()
         if item:
             item.update({'name':name,'price':data['price']})
             return f"items was update"
