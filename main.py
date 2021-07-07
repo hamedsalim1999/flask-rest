@@ -35,7 +35,15 @@ class Student(Resource):
             return f"items was deleted"
         else:
             return "we dont have this item "
-  
+    def put(self,name):
+        item = next(filter(lambda x : x['name'] == name , datas),None) 
+        data = request.get_json()
+        if item:
+            item.update({'name':name,'price':data['price']})
+            return f"items was update"
+        else:
+            datas.append({'name':name,'price':data['price']})   
+            return "iteam was crate"   
 api.add_resource(ItemList,'/items')
 api.add_resource(Student , '/item/<string:name>')
 
