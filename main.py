@@ -32,9 +32,13 @@ class Student(Resource):
         return {'items' : None} , 404
         # return{"Student":name}
     def post(self,name):
-        data = request.get_json()
-        datas.append({'name':name,'price':data['price']})
-        return datas , 201
+        item = next(filter(lambda x : x['name'] == name , datas),None) 
+        data = self.parser.parse_args()
+        if item:
+            return "we have this item"
+        else:
+            datas.append({'name':name,'price':data['price']})
+            return f"item was create"
     def delete(self,name):
         item = next(filter(lambda x : x['name'] == name , datas),None) 
         if item:
