@@ -23,7 +23,7 @@ class Student(Resource):
         required=True,
         help="this field not can be blank"
         )
-    @jwt_required()
+    # @jwt_required()
     def get(self,name):
         item = next(filter(lambda x : x['name'] == name , datas),None) 
         if item:
