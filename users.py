@@ -1,5 +1,5 @@
 import sqlite3
-from sqlite3.dbapi2 import Cursor
+from sqlite3 import Cursor
 
 class User:
     def __init__(self,_id,username,password):
