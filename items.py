@@ -12,6 +12,8 @@ class Item(Resource):
         )
         self.connect = sqlite3.connect('mydb.db')
         self.cursor = self.connect.cursor()
+
+
     @jwt_required()
     def get(self,name):
         query = "SELECT * FROM items WHERE name=?"
@@ -24,25 +26,17 @@ class Item(Resource):
         
         return {'items' : None} , 404
         
+
     def post (self,name):
         data = self.parser.parse_args()
         query = "INSERT INTO items VALUES (NULL,?,?)"
         self.cursor.execute(query,(name,data["price"]))
         self.connect.commit()
         return {"msg":"item was create"}
-    # def delete(self,name):
-    #     item = next(filter(lambda x : x['name'] == name , datas),None) 
-    #     if item:
-    #         datas.remove(item)
-    #         return f"items was deleted"
-    #     else:
-    #         return "we dont have this item "
-    # def put(self,name):
-    #     item = next(filter(lambda x : x['name'] == name , datas),None) 
-    #     data = self.parser.parse_args()
-    #     if item:
-    #         item.update({'name':name,'price':data['price']})
-    #         return f"items was update"
-    #     else:
-    #         datas.append({'name':name,'price':data['price']})   
-    #         return "iteam was crate"   
+
+
+    def delete (self,name):
+        query = "DELETE FROM items WHERE id=?"
+        self.cursor.execute(query,(name,))
+        self.connect.commit()
+        return {"msg":"item was deleted"}
