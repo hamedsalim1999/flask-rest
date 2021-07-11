@@ -32,17 +32,5 @@ class User:
             user= None
         connect.close()
         return user
-    # @classmethod
-    # def find_by_password(cls,password):
-    #     connect = sqlite3.connect('mydb.db')
-    #     cursor = connect.cursor()
-    #     query = "SELECT * FROM users WHERE password=?"
-    #     result = cursor.execute(query,(password,))
-    #     row = result.fetchone()
-    #     if row:
-    #         user=cls(*row)
-    #     else:
-    #         user= None
-    #     connect.close()
-    #     return user
+
 
