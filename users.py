@@ -1,6 +1,6 @@
 import sqlite3
 from sqlite3 import Cursor
-
+from flask_restful import Resource
 class User:
     def __init__(self,_id,username,password):
         self.id = _id
