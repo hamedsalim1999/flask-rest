@@ -23,15 +23,13 @@ class Item(Resource):
             return {'items':{'name':row[1],'price':row[2]}},200
         
         return {'items' : None} , 404
-        # return{"Student":name}
-    # def post(self,name):
-    #     item = next(filter(lambda x : x['name'] == name , datas),None) 
-    #     data = self.parser.parse_args()
-    #     if item:
-    #         return "we have this item"
-    #     else:
-    #         datas.append({'name':name,'price':data['price']})
-    #         return f"item was create"
+        
+    def post (self,name):
+        data = self.parser.parse_args()
+        query = "INSERT INTO items VALUES (NULL,?,?)"
+        self.cursor.execute(query,(name,data["price"]))
+        self.connect.commit()
+        return {"msg":"item was create"}
     # def delete(self,name):
     #     item = next(filter(lambda x : x['name'] == name , datas),None) 
     #     if item:
