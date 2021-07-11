@@ -12,7 +12,7 @@ class Item(Resource):
         )
         self.connect = sqlite3.connect('mydb.db')
         self.cursor = self.connect.cursor()
-    # @jwt_required()
+    @jwt_required()
     def get(self,name):
         query = "SELECT * FROM items WHERE name=?"
         result = self.cursor.execute(query,(name,))
