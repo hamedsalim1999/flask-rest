@@ -91,3 +91,20 @@ class Item(Resource):
                 return {"MSG":"An error occurred inserting the item"}
         return {"msg":"item was update"}
 
+class ItemList(Resource):
+    def get(self):
+        query = "SELECT * FROM items"
+        connect = sqlite3.connect('mydb.db')
+        cursor = connect.cursor()
+        
+        result = cursor.execute(query)
+        item = []
+        for row in result:
+            item.append({
+                "id":row[0],
+                "name":row[1],
+                "price":row[2],
+            }
+        )
+        connect.close()
+        return item
