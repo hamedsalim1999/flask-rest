@@ -3,7 +3,7 @@ from flask_restful import Api , Resource , reqparse
 from flask_jwt import JWT , jwt_required
 from secrety import authenticate,identity
 from users import UserRegister
-from .items import Item
+from items import Item
 app = Flask(__name__)
 api = Api(app)
 app.config['SECRET_KEY'] ='thisissecret'
