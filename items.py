@@ -20,7 +20,7 @@ class Item(Resource):
         self.connect.close()
 
         if row:
-            return row , 200 if row is not None else 404
+            return {'items':{'name':row[1],'price':row[2]}},200
         
         return {'items' : None} , 404
         # return{"Student":name}
