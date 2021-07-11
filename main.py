@@ -2,7 +2,7 @@ from flask import Flask ,request
 from flask_restful import Api , Resource , reqparse
 from flask_jwt import JWT , jwt_required
 from secrety import authenticate,identity
-
+from users import UserRegister
 
 app = Flask(__name__)
 api = Api(app)
@@ -57,6 +57,6 @@ class Student(Resource):
             return "iteam was crate"   
 api.add_resource(ItemList,'/items')
 api.add_resource(Student , '/item/<string:name>')
-
+api.add_resource(UserRegister,'/singup')
 if __name__ == '__main__':
     app.run(debug=True)
