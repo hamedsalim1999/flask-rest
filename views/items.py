@@ -1,65 +1,110 @@
-from flask_restful import Resource, reqparse
-from flask_jwt import jwt_required
-from models.items import ItemModel
-
+import sqlite3
+from flask_restful import Resource,reqparse
+from flask_jwt import JWT , jwt_required
 
 class Item(Resource):
-    parser = reqparse.RequestParser()
-    parser.add_argument('price',
-                        type=float,
-                        required=True,
-                        help="This field cannot be left blank!"
-                        )
-    parser.add_argument('store_id',
-                        type=int,
-                        required=True,
-                        help="Every item needs a store_id."
-                        )
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('price',
+        type=float,
+        required=True,
+        help="this field not can be blank"
+        )
+        self.connect = sqlite3.connect('mydb.db')
+        self.cursor = self.connect.cursor()
 
-    @jwt_required()
-    def get(self, name):
-        item = ItemModel.find_by_name(name)
-        if item:
-            return item.json()
-        return {'message': 'Item not found'}, 404
+    @classmethod
+    def insert(cls,item):
+        query = "INSERT INTO items VALUES (NULL,?,?)"
+        connect = sqlite3.connect('mydb.db')
+        cursor = connect.cursor()
+        cursor.execute(query,(item["name"],item["price"]))
+        connect.commit()
+        connect.close()
+    
+    @classmethod
+    def find_by_name(cls, name):
+        connection = sqlite3.connect('mydb.db')
+        cursor = connection.cursor()
 
-    def post(self, name):
-        if ItemModel.find_by_name(name):
-            return {'message': f"An item with name '{name}' already exists."}, 400
+        query = "SELECT * FROM items WHERE name=?"
+        result = cursor.execute(query, (name,))
+        row = result.fetchone()
+        connection.close()
 
-        data = Item.parser.parse_args()
+        if row:
+            return {'item': {'name': row[1], 'price': row[2]}}
 
-        item = ItemModel(name, **data)
+    @classmethod
+    def update(cls,item):
+        query = "UPDATE items SET price=? WHERE name=?"
+        connect = sqlite3.connect('mydb.db')
+        cursor = connect.cursor()
+        cursor.execute(query,(item["price"],item["name"]))
+        connect.commit()
+        connect.close()
 
+
+    def get(self,name):
+        query = "SELECT * FROM items WHERE name=?"
+        result = self.cursor.execute(query,(name,))
+        row = result.fetchone()
+        self.connect.close()
+
+        if row:
+            return {'items':{'name':row[1],'price':row[2]}},200
+        
+        return {'items' : None} , 404
+        
+
+    def post (self,name):
+        if self.find_by_name(name):
+            return {'message': "An item with name '{}' already exists.".format(name)}
+        data = self.parser.parse_args()
+        item = {'name': name, 'price': data['price']}
         try:
-            item.save_to_db()
+            Item.insert(item)
         except:
-            return {"message": "An error occurred inserting the item."}, 500
+            return {"message": "An error occurred inserting the item."}
 
-        return item.json(), 201
+        return item
+       
 
-    def delete(self, name):
-        item = ItemModel.find_by_name(name)
+    def delete (self,name):
+        query = "DELETE FROM items WHERE name=?"
+        self.cursor.execute(query,(name,))
+        self.connect.commit()
+        return {"msg":"item was deleted"}
+
+    
+    def put(self,name):
+        data = self.parser.parse_args()
+        item = self.find_by_name(name)
+        update_item = {'name':name,'price':data['price']}
         if item:
-            item.delete_from_db()
-            return {'message': 'Item deleted.'}
-        return {'message': 'Item not found.'}, 404
-
-    def put(self, name):
-        data = Item.parser.parse_args()
-
-        item = ItemModel.find_by_name(name)
-
-        if item:
-            item.price = data['price']
+            self.update(update_item)
         else:
-            item = ItemModel(name, **data)
-
-        item.save_to_db()
-
-        return item.json()
-
+            self.insert(update_item)
+            try:
+                self.insert(update_item)
+            except:
+                return {"MSG":"An error occurred inserting the item"}
+        return {"msg":"item was update"}
 
 class ItemList(Resource):
     def get(self):
-        return {'items': list(map(lambda x: x.json(), ItemModel.query.all()))}
+        query = "SELECT * FROM items"
+        connect = sqlite3.connect('mydb.db')
+        cursor = connect.cursor()
+        
+        result = cursor.execute(query)
+        item = []
+        for row in result:
+            item.append({
+                "id":row[0],
+                "name":row[1],
+                "price":row[2],
+            }
+        )
+        connect.close()
+        return item
