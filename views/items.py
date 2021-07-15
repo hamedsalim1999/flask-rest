@@ -1,7 +1,7 @@
 import sqlite3
 from flask_restful import Resource,reqparse
 from flask_jwt import JWT , jwt_required
-
+from models.items import ItemModel
 class Item(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
@@ -58,7 +58,7 @@ class Item(Resource):
         
 
     def post (self,name):
-        if self.find_by_name(name):
+        if ItemModel.find_by_name(name):
             return {'message': "An item with name '{}' already exists.".format(name)}
         data = self.parser.parse_args()
         item = {'name': name, 'price': data['price']}
@@ -79,14 +79,14 @@ class Item(Resource):
     
     def put(self,name):
         data = self.parser.parse_args()
-        item = self.find_by_name(name)
+        item = ItemModel.find_by_name(name)
         update_item = {'name':name,'price':data['price']}
         if item:
-            self.update(update_item)
+            ItemModel.update(update_item)
         else:
-            self.insert(update_item)
+            ItemModel.insert(update_item)
             try:
-                self.insert(update_item)
+                ItemModel.insert(update_item)
             except:
                 return {"MSG":"An error occurred inserting the item"}
         return {"msg":"item was update"}
