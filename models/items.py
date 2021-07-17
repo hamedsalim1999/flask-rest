@@ -1,13 +1,16 @@
 from db import db
 
 class ItemModel(db.Model):
+    __tablename__="items"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), unique=True, nullable=False)
+    price = db.Column(db.Float, nullable=False)
     def __init__(self, name, price):
         self.name = name
         self.price = price
 
     def json(self):
         return {'name': self.name, 'price': self.price}
-
     @classmethod
     def find_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
