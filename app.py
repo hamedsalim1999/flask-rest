@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 api = Api(app)
-app.config['SECRET_KEY'] ='thisissecret'
+app.config['SECRET_KEY'] ='thisissecrettests'
 jwt = JWT(app,authenticate,identity)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydb.db'
@@ -24,4 +24,6 @@ api.add_resource(Item , '/item/<string:name>')
 # api.add_resource(UserRegister,'/singup')
 # api.add_resource(ItemList,'/')
 if __name__ == '__main__':
+    from db import db
+    db.init_app(app)
     app.run(debug=True)
