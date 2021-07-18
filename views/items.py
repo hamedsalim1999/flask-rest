@@ -12,38 +12,7 @@ class Item(Resource):
         )
         self.connect = sqlite3.connect('mydb.db')
         self.cursor = self.connect.cursor()
-
-    @classmethod
-    def insert(cls,item):
-        query = "INSERT INTO items VALUES (NULL,?,?)"
-        connect = sqlite3.connect('mydb.db')
-        cursor = connect.cursor()
-        cursor.execute(query,(item["name"],item["price"]))
-        connect.commit()
-        connect.close()
     
-    @classmethod
-    def find_by_name(cls, name):
-        connection = sqlite3.connect('mydb.db')
-        cursor = connection.cursor()
-
-        query = "SELECT * FROM items WHERE name=?"
-        result = cursor.execute(query, (name,))
-        row = result.fetchone()
-        connection.close()
-
-        if row:
-            return {'item': {'name': row[1], 'price': row[2]}}
-
-    @classmethod
-    def update(cls,item):
-        query = "UPDATE items SET price=? WHERE name=?"
-        connect = sqlite3.connect('mydb.db')
-        cursor = connect.cursor()
-        cursor.execute(query,(item["price"],item["name"]))
-        connect.commit()
-        connect.close()
-
 
     def get(self,name):
         query = "SELECT * FROM items WHERE name=?"
