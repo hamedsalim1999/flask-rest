@@ -35,10 +35,12 @@ class Item(Resource):
        
 
     def delete (self,name):
-        query = "DELETE FROM items WHERE name=?"
-        self.cursor.execute(query,(name,))
-        self.connect.commit()
-        return {"msg":"item was deleted"}
+        item = ItemModel.find_by_name(name)
+        
+        if item:
+            item.delete_from_db()
+            return {"msg":"item was deleted"}
+        return {"msg":"item wasn't exists"}
 
     
     def put(self,name):
