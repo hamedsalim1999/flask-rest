@@ -22,16 +22,16 @@ class Item(Resource):
         
 
     def post (self,name):
-        if ItemModel.find_by_name(name):
-            return {'message': "An item with name '{}' already exists.".format(name)}
+        item = ItemModel.find_by_name(name)
+        if item :
+            return {"msg":f"{item.json()} already exists"}
         data = self.parser.parse_args()
-        item = {'name': name, 'price': data['price']}
+        item = ItemModel(name,data['price'])
         try:
-            Item.insert(item)
+            item.save_to_db()
+            return {"msg":f"item was crate {item.json()}"}
         except:
-            return {"message": "An error occurred inserting the item."}
-
-        return item
+            return {"msg":"An error occurred inserting the item"}
        
 
     def delete (self,name):
