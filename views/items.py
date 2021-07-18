@@ -15,15 +15,10 @@ class Item(Resource):
     
 
     def get(self,name):
-        query = "SELECT * FROM items WHERE name=?"
-        result = self.cursor.execute(query,(name,))
-        row = result.fetchone()
-        self.connect.close()
-
-        if row:
-            return {'items':{'name':row[1],'price':row[2]}},200
-        
-        return {'items' : None} , 404
+        item =  ItemModel.find_by_name(name)
+        if item : 
+            return item.json()
+        return {"msg":"we dont have not found"} , 404
         
 
     def post (self,name):
