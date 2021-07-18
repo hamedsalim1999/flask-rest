@@ -44,18 +44,15 @@ class Item(Resource):
 
     
     def put(self,name):
-        data = self.parser.parse_args()
         item = ItemModel.find_by_name(name)
-        update_item = {'name':name,'price':data['price']}
+        data = self.parser.parse_args()
         if item:
-            ItemModel.update(update_item)
+            item.price = data['price']  
         else:
-            ItemModel.insert(update_item)
-            try:
-                ItemModel.insert(update_item)
-            except:
-                return {"MSG":"An error occurred inserting the item"}
-        return {"msg":"item was update"}
+            item = ItemModel(name,data['price'])
+        item.save_to_db()
+
+        return item.json()
 
 class ItemList(Resource):
     def get(self):
