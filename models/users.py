@@ -1,38 +1,25 @@
-import sqlite3
 from db import db
-class UserModel:
+class UserModel(db.Model):
     __tablename__="users"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(128), unique=True, nullable=False)
+    username = db.Column(db.String(128), unique=True)
     password = db.Column(db.String(128), nullable=False)
-    def __init__(self,_id,username,password):
-        self.id = _id
+    def __init__(self,username,password):
         self.username = username
         self.password = password
 
     @classmethod
-    def find_by_username(cls,username):
-        connect = sqlite3.connect('mydb.db')
-        cursor = connect.cursor()
-        query = "SELECT * FROM users WHERE username=?"
-        result = cursor.execute(query,(username,))
-        row = result.fetchone()
-        if row:
-            user=cls(*row)
-        else:
-            user= None
-        connect.close()
-        return user
+    def find_by_username(cls, username):
+        return cls.query.filter_by(username=username).first()
+
     @classmethod
-    def find_by_id(cls,_id):
-        connect = sqlite3.connect('mydb.db')
-        cursor = connect.cursor()
-        query = "SELECT * FROM users WHERE id=?"
-        result = cursor.execute(query,(_id,))
-        row = result.fetchone()
-        if row:
-            user=cls(*row)
-        else:
-            user= None
-        connect.close()
-        return user
+    def find_by_id(cls, _id):
+        return cls.query.filter_by(_id=_id).first()
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
