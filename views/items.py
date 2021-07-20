@@ -10,8 +10,7 @@ class Item(Resource):
         required=True,
         help="this field not can be blank"
         )
-        self.connect = sqlite3.connect('mydb.db')
-        self.cursor = self.connect.cursor()
+    
     
 
     def get(self,name):
