@@ -4,6 +4,7 @@ from flask_jwt import JWT
 from secrety import authenticate,identity
 from views.users import UserRegister
 from views.items import Item,ItemList
+from views.store import Store,StoreList
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -27,6 +28,9 @@ app.secret_key = 'jose'
 api.add_resource(Item , '/item/<string:name>')
 api.add_resource(UserRegister,'/singup')
 api.add_resource(ItemList,'/')
+api.add_resource(Store,'/store/<string:name>')
+api.add_resource(StoreList,'/stores')
+
 if __name__ == '__main__':
     from db import db
 
