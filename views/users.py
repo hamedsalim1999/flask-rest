@@ -20,6 +20,6 @@ class UserRegister(Resource):
         data = self.parser.parse_args()
         if UserModel.find_by_username(data['username']):
             return {"MSG":"We have this user naem"}
-        user = UserModel(data['username'],data['password'])
+        user = UserModel(**data)
         user.save_to_db()
         return {"msg":"user was create"}
