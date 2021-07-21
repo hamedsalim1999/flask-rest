@@ -10,7 +10,11 @@ class Item(Resource):
         required=True,
         help="this field not can be blank"
         )
-    
+        self.parser.add_argument('store_id',
+        type=int,
+        required=True,
+        help="every item need store id "
+        )
     
 
     def get(self,name):
@@ -25,7 +29,7 @@ class Item(Resource):
         if item :
             return {"msg":f"{item.json()} already exists"}
         data = self.parser.parse_args()
-        item = ItemModel(name,data['price'])
+        item = ItemModel(name,**data)
         try:
             item.save_to_db()
             return {"msg":f"item was crate {item.json()}"}
@@ -48,7 +52,7 @@ class Item(Resource):
         if item:
             item.price = data['price']  
         else:
-            item = ItemModel(name,data['price'])
+            item = ItemModel(name,**data)
         item.save_to_db()
 
         return item.json()
