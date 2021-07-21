@@ -13,9 +13,11 @@ class UserModel(db.Model):
         return cls.query.filter_by(username=username).first()
 
     @classmethod
-    def find_by_id(cls, _id):
-        return cls.query.filter_by(_id=_id).first()
-
+    def find_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
+    
+    def json(self):
+        return{"id":self.id,"username":self.username}
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
