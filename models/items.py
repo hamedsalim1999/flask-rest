@@ -8,19 +8,25 @@ class ItemModel(db.Model):
     # foreignkey
     store_id = db.Column(db.Integer,db.ForeignKey("store.id"))
     store = db.relationship('StoreModel')
+
     def __init__(self, name, price,store_id):
         self.name = name
         self.price = price
         self.store_id = store_id
     def json(self):
-        return {'name': self.name, 'price': self.price}
+        return {
+            'name': self.name, 
+            'price': self.price,
+            }
+
     @classmethod
     def find_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
+
     @classmethod
     def get_all_row(cls):
+        return {'items':  [x.json() for x in ItemModel.query.all()]}
 
-        return {'items': list(map(lambda x: x.json(), ItemModel.query.all()))}
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
