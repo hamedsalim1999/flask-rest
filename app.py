@@ -1,8 +1,8 @@
 from flask import Flask 
 from flask_restful import Api
-from flask_jwt import JWT 
+from flask_jwt_extended import JWTManager 
 from secrety import authenticate,identity
-from views.users import UserRegister,User
+from views.users import UserRegister,User,UserLogin
 from views.items import Item,ItemList
 from views.store import Store,StoreList
 from flask_sqlalchemy import SQLAlchemy
@@ -12,7 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 api = Api(app)
 app.config['SECRET_KEY'] ='thisissecrettests'
-jwt = JWT(app,authenticate,identity)
+jwt = JWTManager(app)
 
 @app.before_first_request
 def create_tables():
@@ -31,6 +31,7 @@ api.add_resource(ItemList,'/')
 api.add_resource(Store,'/store/<string:name>')
 api.add_resource(StoreList,'/stores')
 api.add_resource(User,'/user/<int:user_id>')
+api.add_resource(UserLogin,'/login')
 if __name__ == '__main__':
     from db import db
 
