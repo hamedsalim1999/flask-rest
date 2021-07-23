@@ -1,7 +1,11 @@
 import sqlite3
 from models.users import UserModel
 from flask_restful import Resource,reqparse
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token,
 
+)
 
 class UserRegister(Resource):
     def __init__(self):
@@ -39,4 +43,28 @@ class User(Resource):
         else:
             return{"msg":"user not found"}
         
+class UserLogin(Resource):
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument('username',
+        type=str,
+        required=True,
+        help="this field not can be blank"
+        )
+        self.parser.add_argument('password',
+        type=str,
+        required=True,
+        help="this field not can be blank"
+        )
 
+    def post(self):
+        data = self.parser.parse_args()
+        user = UserModel.find_by_username(data['username'])
+        if user and data['password']:
+            access_token = create_access_token(identity= user.id,fresh=True)
+            refresh_token = create_refresh_token(user.id)
+            return{
+                "access_token":access_token,
+                "refresh_token":refresh_token,
+            }
+        return {"msg": "your username or password was not correct"}
