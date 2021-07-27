@@ -1,18 +1,21 @@
 from flask import Flask 
 from flask_restful import Api
-from flask_jwt_extended import JWTManager 
-from secrety import authenticate,identity
+from flask_jwt_extended import JWTManager
 from views.users import UserRegister,User,UserLogin
 from views.items import Item,ItemList
 from views.store import Store,StoreList
-from flask_sqlalchemy import SQLAlchemy
-
-
 
 app = Flask(__name__)
 api = Api(app)
 app.config['SECRET_KEY'] ='thisissecrettests'
 jwt = JWTManager(app)
+
+
+@jwt.additional_claims_loader
+def add_claims_to_jwt(identity):  # Remember identity is what we define when creating the access token
+    if identity == 1:   # instead of hard-coding, we should read from a config file or database to get a list of admins instead
+        return {'is_admin': True}
+    return {'is_admin': False}
 
 @app.before_first_request
 def create_tables():
