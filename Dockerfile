@@ -3,7 +3,7 @@ RUN mkdir code
 WORKDIR /code
 COPY . /code
 RUN pip install --upgrade pip
-RUN pip install zipp
+RUN pip install zipp WTForms 
 RUN pip install -r requirements.txt
 EXPOSE 5000
 COPY . .
