@@ -6,14 +6,14 @@ from flask_restful import Resource,reqparse
 class Store(Resource):
 
 
-    def get(self,name):
+    def get(self,name:str):
         store =  StoreModel.find_by_name(name)
         if store : 
             return store.json(),200
         return {"msg":"store not found"} , 404
         
 
-    def post (self,name):
+    def post (self,name:str):
         store = StoreModel.find_by_name(name)
         if store :
             return {"msg":f"{store.json()} already exists"},200
@@ -26,7 +26,7 @@ class Store(Resource):
             return {"msg":"An error occurred inserting the item"},404
        
 
-    def delete (self,name):
+    def delete (self,name:str):
         store = StoreModel.find_by_name(name)
         
         if store:
