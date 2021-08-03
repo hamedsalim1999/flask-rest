@@ -27,13 +27,13 @@ class UserRegister(Resource):
 
 class User(Resource):
 
-    def get(cls,user_id):
+    def get(cls,user_id:int):
         user = UserModel.find_by_id(user_id)
         if not user:
             return {"msg": "user nOt found "},404
         return user.json()
 
-    def delete(cls,user_id):
+    def delete(cls,user_id:int):
         claims = get_jwt()
         if not claims['is_admin']:
             return {'message': 'Admin privilege required.'}, 401
