@@ -17,14 +17,14 @@ class Item(Resource):
         )
     
     @jwt_required()
-    def get(self,name):
+    def get(self,name:str):
         item =  ItemModel.find_by_name(name)
         if item : 
             return item.json(),200
         return {"msg":"we dont have not found"} , 404
         
 
-    def post (self,name):
+    def post (self,name:str):
         item = ItemModel.find_by_name(name)
         if item :
             return {"msg":f"{item.json()} already exists"},200
@@ -37,7 +37,7 @@ class Item(Resource):
             return {"msg":"An error occurred inserting the item"},404
        
     @jwt_required()
-    def delete (self,name):
+    def delete (self,name:str):
         item = ItemModel.find_by_name(name)
         if item:
             item.delete_from_db()
@@ -45,7 +45,7 @@ class Item(Resource):
         return {"msg":"item wasn't exists"},404
 
     
-    def put(self,name):
+    def put(self,name:str):
         item = ItemModel.find_by_name(name)
         data = self.parser.parse_args()
         if item:
