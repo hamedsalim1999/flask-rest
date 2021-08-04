@@ -17,7 +17,8 @@ class Item(Resource):
         )
     
     @jwt_required()
-    def get(self,name:str):
+    @classmethod
+    def get(cls,name:str):
         item =  ItemModel.find_by_name(name)
         if item : 
             return item.json(),200
@@ -37,7 +38,8 @@ class Item(Resource):
             return {"msg":"An error occurred inserting the item"},404
        
     @jwt_required()
-    def delete (self,name:str):
+    @classmethod
+    def delete (cls,name:str):
         item = ItemModel.find_by_name(name)
         if item:
             item.delete_from_db()
@@ -57,5 +59,6 @@ class Item(Resource):
         return item.json()
 
 class ItemList(Resource):
-    def get(self):
+    @classmethod
+    def get(cls):
         return ItemModel.get_all_row(),200
