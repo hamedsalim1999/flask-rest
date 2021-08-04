@@ -1,25 +1,17 @@
 from models.users import UserModel
-from flask_restful import Resource,reqparse
+from flask_restful import Resource
 from flask_jwt_extended import create_access_token,create_refresh_token
 from flask_jwt_extended import jwt_required, get_jwt
-
-_user_parser = reqparse.RequestParser()
-_user_parser.add_argument('username',
-        type=str,
-        required=True,
-        help="this field not can be blank"
-        )
-_user_parser.add_argument('password',
-        type=str,
-        required=True,
-        help="this field not can be blank"
-        )
-
-
+from serializer.users import UserSchema 
+from flask import request
+from marshmallow import ValidationError
 class UserRegister(Resource):
     @classmethod
     def post(cls):
-        data = _user_parser.parse_args()
+        try:
+            data = UserSchema().load(request.get_json())
+        except ValidationError as error :
+            return error.messages,400
         if UserModel.find_by_username(data['username']):
             return {"MSG":"We have this user naem"}
         user = UserModel(**data)
@@ -35,9 +27,6 @@ class User(Resource):
         return user.json()
 
     def delete(cls,user_id:int):
-        claims = get_jwt()
-        if not claims['is_admin']:
-            return {'message': 'Admin privilege required.'}, 401
         if UserModel.find_by_id(user_id):
             UserModel.find_by_id(user_id).delete_from_db()
             return{"msg":"user was deleted"}
@@ -48,7 +37,10 @@ class UserLogin(Resource):
 
 
     def post(cls):
-        data = _user_parser.parse_args()
+        try:
+            data = UserSchema().load(request.get_json())
+        except ValidationError as error :
+            return error.messages,400
         user = UserModel.find_by_username(data['username'])
         if user and data['password']:
             access_token = create_access_token(identity= user.id,fresh=True)
