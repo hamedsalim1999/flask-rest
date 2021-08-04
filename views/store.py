@@ -5,15 +5,15 @@ from flask_restful import Resource,reqparse
 
 class Store(Resource):
 
-
-    def get(self,name:str):
+    @classmethod
+    def get(cls,name:str):
         store =  StoreModel.find_by_name(name)
         if store : 
             return store.json(),200
         return {"msg":"store not found"} , 404
         
-
-    def post (self,name:str):
+    @classmethod
+    def post (cls,name:str):
         store = StoreModel.find_by_name(name)
         if store :
             return {"msg":f"{store.json()} already exists"},200
@@ -25,8 +25,8 @@ class Store(Resource):
         except:
             return {"msg":"An error occurred inserting the item"},404
        
-
-    def delete (self,name:str):
+    @classmethod
+    def delete (cls,name:str):
         store = StoreModel.find_by_name(name)
         
         if store:
@@ -35,5 +35,6 @@ class Store(Resource):
         return {"msg":"store wasn't exists"},404 
         
 class StoreList(Resource):
-    def get(self):
+    @classmethod
+    def get(cls):
         return StoreModel.get_all_row(),200
