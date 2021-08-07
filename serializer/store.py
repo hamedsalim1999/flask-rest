@@ -1,5 +1,8 @@
-from marshmallow import Schema , fields
+# from models.store import StoreModel
+# from ma import ma
+# class StoreSchema(ma.SQLAlchemyAutoSchema):
+#     class Meta:
+#         model=StoreModel
+#         include_relationships = True
 
-class StoreSchema(Schema):
-    id = fields.Integer()
-    name = fields.Str(required=True)
+    
