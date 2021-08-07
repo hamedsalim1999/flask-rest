@@ -4,6 +4,8 @@ from flask_jwt_extended import JWTManager
 from views.users import UserRegister,User,UserLogin
 from views.items import Item,ItemList
 from views.store import Store,StoreList
+from db import db
+from ma import ma
 app = Flask(__name__)
 api = Api(app)
 app.config['SECRET_KEY'] ='thisissecrettests'
@@ -35,7 +37,6 @@ api.add_resource(UserLogin,'/login')
 
 
 if __name__ == '__main__':
-    from db import db
-
+    ma.init_app(app)
     db.init_app(app)
     app.run(debug=True)
