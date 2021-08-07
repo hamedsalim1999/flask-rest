@@ -1,7 +1,9 @@
-from marshmallow import Schema , fields
-
-class ItemSchema(Schema):
-    id = fields.Integer()
-    name = fields.Str(required=True)
-    price = fields.Float(required=True)
-    store_id = fields.Integer(required=True)
+from models.items import ItemModel
+from models.store import StoreModel
+from ma import ma
+class ItemSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = ItemModel
+        include_relationships = True
+  
+    
