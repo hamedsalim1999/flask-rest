@@ -1,4 +1,4 @@
-import sqlite3
+from flask import request
 from models.store import StoreModel
 from flask_restful import Resource,reqparse
 
