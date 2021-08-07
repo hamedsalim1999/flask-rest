@@ -4,22 +4,18 @@ userJSON = Dict[str,Union[str,str]]
 class UserModel(db.Model):
     __tablename__="users"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(128), unique=True)
+    username = db.Column(db.String(128), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
-    def __init__(self,username:str,password:str):
-        self.username = username
-        self.password = password
+
 
     @classmethod
     def find_by_username(cls, username:str)-> "UserModel":
-        return cls.query.filter_by(username=username)
+        return cls.query.filter_by(username=username).first()
 
     @classmethod
     def find_by_id(cls, id:int) -> "UserModel":
         return cls.query.filter_by(id=id).first()
-    
-    def json(self)-> userJSON:
-        return{"id":self.id,"username":self.username}
+
     def save_to_db(self)-> None:
         db.session.add(self)
         db.session.commit()
