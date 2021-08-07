@@ -12,7 +12,7 @@ class UserRegister(Resource):
             data = UserSchema().load(request.get_json())
         except ValidationError as error :
             return error.messages,400
-        if UserModel.find_by_username(data['username']):
+        if UserModel.find_by_username.username:
             return {"MSG":"We have this user naem"}
         user = UserModel(**data)
         user.save_to_db()
@@ -24,7 +24,7 @@ class User(Resource):
         user = UserModel.find_by_id(user_id)
         if not user:
             return {"msg": "user nOt found "},404
-        return user.json()
+        return UserSchema().dump(user)
 
     def delete(cls,user_id:int):
         if UserModel.find_by_id(user_id):
@@ -41,8 +41,8 @@ class UserLogin(Resource):
             data = UserSchema().load(request.get_json())
         except ValidationError as error :
             return error.messages,400
-        user = UserModel.find_by_username(data['username'])
-        if user and data['password']:
+        user = UserModel.find_by_username(data.username)
+        if user and data.password:
             access_token = create_access_token(identity= user.id,fresh=True)
             refresh_token = create_refresh_token(user.id)
             return{
