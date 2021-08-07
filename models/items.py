@@ -14,16 +14,10 @@ class ItemModel(db.Model):
         self.name = name
         self.price = price
         self.store_id = store_id
-    def json(self) -> ItemJSON:
-        return {
-            'name': self.name, 
-            'price': self.price,
-            'store_id':self.store_id
-            }
 
     @classmethod
     def find_by_name(cls, name:str) -> "ItemModel":
-        return cls.query.filter_by(name=name)
+        return cls.query.filter_by(name=name).first()
 
     @classmethod
     def get_all_row(cls) -> List:
