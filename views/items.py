@@ -1,7 +1,9 @@
 from flask_restful import Resource,reqparse
 from flask_jwt_extended import jwt_required
-
+from serializer.items import ItemSchema
 from models.items import ItemModel
+from flask import request
+
 class Item(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
@@ -29,7 +31,7 @@ class Item(Resource):
         item = ItemModel.find_by_name(name)
         if item :
             return {"msg":f"{item.json()} already exists"},200
-        data = self.parser.parse_args()
+        data = ItemSchema.load(request.get_json())
         item = ItemModel(name,**data)
         try:
             item.save_to_db()
@@ -49,9 +51,9 @@ class Item(Resource):
     
     def put(self,name:str):
         item = ItemModel.find_by_name(name)
-        data = self.parser.parse_args()
+        data = ItemSchema.load(request.get_json())
         if item:
-            item.price = data['price']  ,202
+            item.price = data.price  ,202
         else:
             item = ItemModel(name,**data),201
         item.save_to_db()
