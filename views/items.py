@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required
 from serializer.items import ItemSchema
 from models.items import ItemModel
 from flask import request
-
+from marshmallow import ValidationError
 class Item(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
@@ -28,16 +28,17 @@ class Item(Resource):
         
 
     def post (self,name:str):
-        item = ItemModel.find_by_name(name)
-        if item :
-            return {"msg":f"{ItemSchema.dump(item)} already exists"},200
-        data = ItemSchema.load(request.get_json())
-        item = ItemModel(name,**data)
+        
+        try:
+            item = ItemModel.find_by_name(name)
+        except ValidationError as error :
+            return error.messages,400
         try:
             item.save_to_db()
             return {"msg":f"item was crate {ItemSchema.dump(item)}"},201
         except:
-            return {"msg":"An error occurred inserting the item"},404
+            return {"msg":"An error occurred inserting the item"},500
+    
        
     @jwt_required()
     @classmethod
@@ -51,16 +52,21 @@ class Item(Resource):
     
     def put(self,name:str):
         item = ItemModel.find_by_name(name)
-        data = ItemSchema.load(request.get_json())
+        
+        try:
+            data = ItemSchema.load(request.get_json())
+        except ValidationError as err:
+            return err.message,400
         if item:
             item.price = data.price  ,202
         else:
             item = ItemModel(name,**data),201
+        
         item.save_to_db()
 
-        return ItemSchema.dump(item)
+        return ItemSchema.dump(item),200
 
 class ItemList(Resource):
     @classmethod
     def get(cls):
-        return ItemModel.get_all_row(),200
+        return {"items":ItemSchema(many=True).dump(ItemModel.get_all_row())},200
