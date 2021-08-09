@@ -17,10 +17,10 @@ class StoreModel(db.Model):
     @classmethod
     def find_by_name(cls, name:str)-> "StoreModel":
         return cls.query.filter_by(name=name).first()
-
+    
     @classmethod
-    def get_all_row(cls)-> List:
-        return {'stores': [x.json() for x in StoreModel.query.all()]}
+    def get_all_row(cls) -> List:
+        return cls.query.all()
 
     def save_to_db(self)-> None:
         db.session.add(self)
