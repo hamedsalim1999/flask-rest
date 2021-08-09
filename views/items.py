@@ -23,19 +23,19 @@ class Item(Resource):
     def get(cls,name:str):
         item =  ItemModel.find_by_name(name)
         if item : 
-            return item.json(),200
+            return ItemSchema.dump(item),200
         return {"msg":"we dont have not found"} , 404
         
 
     def post (self,name:str):
         item = ItemModel.find_by_name(name)
         if item :
-            return {"msg":f"{item.json()} already exists"},200
+            return {"msg":f"{ItemSchema.dump(item)} already exists"},200
         data = ItemSchema.load(request.get_json())
         item = ItemModel(name,**data)
         try:
             item.save_to_db()
-            return {"msg":f"item was crate {item.json()}"},201
+            return {"msg":f"item was crate {ItemSchema.dump(item)}"},201
         except:
             return {"msg":"An error occurred inserting the item"},404
        
@@ -58,7 +58,7 @@ class Item(Resource):
             item = ItemModel(name,**data),201
         item.save_to_db()
 
-        return item.json()
+        return ItemSchema.dump(item)
 
 class ItemList(Resource):
     @classmethod
