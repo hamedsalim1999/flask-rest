@@ -37,4 +37,4 @@ class Store(Resource):
 class StoreList(Resource):
     @classmethod
     def get(cls):
-        return StoreModel.get_all_row(),200
+        return {"items":StoreSchema(many=True).dump(StoreModel.get_all_row())},200
