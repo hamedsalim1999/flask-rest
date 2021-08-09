@@ -1,7 +1,7 @@
 from flask import request
 from models.store import StoreModel
 from flask_restful import Resource,reqparse
-
+from serializer.store import StoreSchema
 
 class Store(Resource):
 
@@ -9,19 +9,19 @@ class Store(Resource):
     def get(cls,name:str):
         store =  StoreModel.find_by_name(name)
         if store : 
-            return store.json(),200
+            return Resource().dump(store),200
         return {"msg":"store not found"} , 404
         
     @classmethod
     def post (cls,name:str):
         store = StoreModel.find_by_name(name)
         if store :
-            return {"msg":f"{store.json()} already exists"},200
+            return {"msg":f"{Resource().dump(store)} already exists"},200
 
         store = StoreModel(name)
         try:
             store.save_to_db()
-            return {"msg":f"item was crate {store.json()}"},201
+            return {"msg":f"item was crate {Resource().dump(store)}"},201
         except:
             return {"msg":"An error occurred inserting the item"},404
        
