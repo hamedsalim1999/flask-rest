@@ -21,7 +21,7 @@ class ItemModel(db.Model):
 
     @classmethod
     def get_all_row(cls) -> List:
-        return {'items':  [x.json() for x in ItemModel.query.all()]}
+        return cls.query.all()
 
     def save_to_db(self) -> "None":
         db.session.add(self)
