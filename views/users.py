@@ -4,15 +4,11 @@ from flask_jwt_extended import create_access_token,create_refresh_token
 from flask_jwt_extended import jwt_required, get_jwt
 from serializer.users import UserSchema 
 from flask import request
-from marshmallow import ValidationError
 class UserRegister(Resource):
     @classmethod
     def post(cls):
-        try:
-            data = UserSchema().load(request.get_json())
-        except ValidationError as error :
-            return error.messages,400
-        if UserModel.find_by_username.username:
+        data = UserSchema().load(request.get_json())
+        if UserModel.find_by_username('username'):
             return {"MSG":"We have this user naem"}
         user = UserModel(**data)
         user.save_to_db()
@@ -37,10 +33,7 @@ class UserLogin(Resource):
 
 
     def post(cls):
-        try:
-            data = UserSchema().load(request.get_json())
-        except ValidationError as error :
-            return error.messages,400
+        data = UserSchema().load(request.get_json())
         user = UserModel.find_by_username(data.username)
         if user and data.password:
             access_token = create_access_token(identity= user.id,fresh=True)
