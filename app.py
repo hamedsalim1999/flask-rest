@@ -6,6 +6,7 @@ from views.items import Item,ItemList
 from views.store import Store,StoreList
 from db import db
 from ma import ma
+from marshmallow import ValidationError
 app = Flask(__name__)
 api = Api(app)
 app.config['SECRET_KEY'] ='thisissecrettests'
@@ -16,8 +17,9 @@ def create_tables():
     db.create_all()
 
 
-jwt = JWTManager(app)
-
+@app.errorhandler(ValidationError)
+def handel_error_marshmallow_validator(err):
+    return jsonify(err.message),400
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydb.db'
