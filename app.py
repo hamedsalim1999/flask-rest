@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
-from views.users import UserRegister,User,UserLogin
+from views.users import UserRegister,User,UserLogin,UserConfirm
 from views.items import Item,ItemList
 from views.store import Store,StoreList
 from db import db
@@ -36,7 +36,7 @@ api.add_resource(Store,'/store/<string:name>')
 api.add_resource(StoreList,'/stores')
 api.add_resource(User,'/user/<int:user_id>')
 api.add_resource(UserLogin,'/login')
-
+api.add_resource(UserConfirm,'/userconfern/<int:user_id>')
 
 if __name__ == '__main__':
     ma.init_app(app)
