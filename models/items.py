@@ -7,13 +7,8 @@ class ItemModel(db.Model):
     name = db.Column(db.String(128), unique=True, nullable=False)
     price = db.Column(db.Float, nullable=False)
     # foreignkey
-    store_id = db.Column(db.Integer,db.ForeignKey("store.id"))
+    store_id = db.Column(db.Integer,db.ForeignKey("store.id"), nullable=False)
     store = db.relationship('StoreModel')
-
-    def __init__(self, name:str, price:float,store_id:int):
-        self.name = name
-        self.price = price
-        self.store_id = store_id
 
     @classmethod
     def find_by_name(cls, name:str) -> "ItemModel":
