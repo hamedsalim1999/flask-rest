@@ -55,4 +55,4 @@ class UserConfirm(Resource):
         
         user.activate = True
         user.save_to_db()
-        return{"msg": "user not found"},200
+        return{"msg": "user activeate"},200
