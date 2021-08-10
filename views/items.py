@@ -3,7 +3,6 @@ from flask_jwt_extended import jwt_required
 from serializer.items import ItemSchema
 from models.items import ItemModel
 from flask import request
-from marshmallow import ValidationError
 class Item(Resource):
     def __init__(self):
         self.parser = reqparse.RequestParser()
@@ -29,10 +28,8 @@ class Item(Resource):
 
     def post (self,name:str):
         
-        try:
-            item = ItemModel.find_by_name(name)
-        except ValidationError as error :
-            return error.messages,400
+
+        item = ItemModel.find_by_name(name)
         try:
             item.save_to_db()
             return {"msg":f"item was crate {ItemSchema.dump(item)}"},201
@@ -52,11 +49,9 @@ class Item(Resource):
     
     def put(self,name:str):
         item = ItemModel.find_by_name(name)
-        
-        try:
-            data = ItemSchema.load(request.get_json())
-        except ValidationError as err:
-            return err.message,400
+    
+        data = ItemSchema.load(request.get_json())
+
         if item:
             item.price = data.price  ,202
         else:
