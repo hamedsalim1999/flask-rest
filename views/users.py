@@ -36,11 +36,23 @@ class UserLogin(Resource):
         data = UserSchema().load(request.get_json())
         user = UserModel.find_by_username(data.username)
         if user and data.password:
-            access_token = create_access_token(identity= user.id,fresh=True)
-            refresh_token = create_refresh_token(user.id)
-            return{
-                "access_token":access_token,
-                "refresh_token":refresh_token,
-            },200
+            if user.activate:
+                access_token = create_access_token(identity= user.id,fresh=True)
+                refresh_token = create_refresh_token(user.id)
+                return{
+                    "access_token":access_token,
+                    "refresh_token":refresh_token,
+                },200
+            return {"msg":"user not activate yet please check your email"}
         return {"msg": "your username or password was not correct"},401
 
+class UserConfirm(Resource):
+    @classmethod
+    def get(cls,user_id:int):
+        user = UserModel.find_by_id(user_id)
+        if not user:
+            return{"msg": "user not found"},404
+        
+        user.activate = True
+        user.save_to_db()
+        return{"msg": "user not found"},200
