@@ -1,6 +1,14 @@
+from flask.helpers import url_for
 from db import db
-from typing import List , Dict, Union
+from flask import request
+from typing import Dict, Union
 userJSON = Dict[str,Union[str,str]]
+MAILGUN_DOMAIN=""
+MAILGUN_API_KEY=""
+FROM_TITLE = ""
+FROM_EMAIL =""
+
+
 class UserModel(db.Model):
     __tablename__="users"
     id = db.Column(db.Integer, primary_key=True)
@@ -13,7 +21,9 @@ class UserModel(db.Model):
     @classmethod
     def find_by_username(cls, username:str)-> "UserModel":
         return cls.query.filter_by(username=username).first()
-
+    @classmethod
+    def find_by_email(cls, email:str)-> "UserModel":
+        return cls.query.filter_by(email=email).first()
     @classmethod
     def find_by_id(cls, id:int) -> "UserModel":
         return cls.query.filter_by(id=id).first()
@@ -25,3 +35,17 @@ class UserModel(db.Model):
     def delete_from_db(self)-> None:
         db.session.delete(self)
         db.session.commit()
+      
+    def sendconfern_email(self) -> None:
+        link = request.url_root[:-1]+ url_for('userconfirm',user_id=self.id)
+        
+        return post(
+            f"",
+            auth=("api",API_KEY),
+            data={
+                "form":f"{FROM_TITLE}<{FROM_EMAIL}>",
+                "to":self.email,
+                "subject":"Registerion confirmation",
+                "text":f"please click this link for active your account : {link}"
+            }
+        )
