@@ -6,6 +6,7 @@ from views.items import Item,ItemList
 from views.store import Store,StoreList
 from db import db
 from ma import ma
+from mail import mail
 from marshmallow import ValidationError
 app = Flask(__name__)
 api = Api(app)
@@ -41,4 +42,5 @@ api.add_resource(UserConfirm,'/userconfern/<int:user_id>')
 if __name__ == '__main__':
     ma.init_app(app)
     db.init_app(app)
+    mail.init_app(app)
     app.run(debug=True)
