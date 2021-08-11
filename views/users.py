@@ -4,15 +4,24 @@ from flask_jwt_extended import create_access_token,create_refresh_token
 from flask_jwt_extended import jwt_required, get_jwt
 from serializer.users import UserSchema 
 from flask import request
+import traceback
 class UserRegister(Resource):
     @classmethod
     def post(cls):
         data = UserSchema().load(request.get_json())
+        user = UserModel.find_by_username(data)
         if UserModel.find_by_username('username'):
             return {"MSG":"We have this user naem"}
-        user = UserModel(**data)
-        user.save_to_db()
-        return {"msg":"user was create"}
+        if UserModel.find_by_email('email'):
+            return {"MSG":"We have this email"}
+        try:
+            user.save_to_db()
+            user.sendconfern_email()
+        except:
+            traceback.print_exc()
+            return {"msg":"filed to create user "},500
+            
+        return {"msg":"user was create"},201
 
 class User(Resource):
 
@@ -31,10 +40,10 @@ class User(Resource):
         
 class UserLogin(Resource):
 
-
+    @classmethod
     def post(cls):
         data = UserSchema().load(request.get_json())
-        user = UserModel.find_by_username(data.username)
+        user = UserModel.find_by_username(data,partial=("email",))
         if user and data.password:
             if user.activate:
                 access_token = create_access_token(identity= user.id,fresh=True)
