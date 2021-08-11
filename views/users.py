@@ -43,7 +43,7 @@ class UserLogin(Resource):
                     "access_token":access_token,
                     "refresh_token":refresh_token,
                 },200
-            return {"msg":"user not activate yet please check your email"}
+            return {"msg":"user not activate yet please check your email"},403
         return {"msg": "your username or password was not correct"},401
 
 class UserConfirm(Resource):
