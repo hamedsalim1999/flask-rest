@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.8.11-alpine3.14
 RUN mkdir code
 WORKDIR /code
 COPY . /code
