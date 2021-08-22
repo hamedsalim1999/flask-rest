@@ -43,4 +43,4 @@ if __name__ == '__main__':
     ma.init_app(app)
     db.init_app(app)
     mail.init_app(app)
-    app.run(debug=True)
+    app.run(debug=True,host="0.0.0.0")
