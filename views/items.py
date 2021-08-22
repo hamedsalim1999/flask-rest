@@ -17,7 +17,7 @@ class Item(Resource):
         help="every item need store id "
         )
     
-    @jwt_required()
+    @jwt_required
     @classmethod
     def get(cls,name:str):
         item =  ItemModel.find_by_name(name)
