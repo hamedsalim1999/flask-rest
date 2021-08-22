@@ -3,6 +3,7 @@ RUN mkdir code
 WORKDIR /code
 COPY . /code
 RUN apk update && apk add libressl-dev postgresql-dev libffi-dev gcc musl-dev python3-dev py-cryptography
+RUN apk add --update py-pip
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5000
