@@ -37,7 +37,7 @@ class Item(Resource):
             return {"msg":"An error occurred inserting the item"},500
     
        
-    @jwt_required()
+    @jwt_required
     @classmethod
     def delete (cls,name:str):
         item = ItemModel.find_by_name(name)
