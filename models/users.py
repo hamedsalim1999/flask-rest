@@ -3,12 +3,14 @@ from db import db
 from requests import Response,post
 from typing import Dict, Union
 import os
+from decouple import config
+
 userJSON = Dict[str,Union[str,str]]
 
-ADDRES=os.environ['ADDRES']
-FROM_TITLE=os.environ['FROM_TITLE']
-FROM_EMAIL =os.environ['FROM_EMAIL']
-PRIVATE_API_KEY=os.environ['PRIVATE_API_KEY']
+ADDRES=config('ADDRES')
+FROM_TITLE=config('FROM_TITLE')
+FROM_EMAIL =config('FROM_EMAIL')
+PRIVATE_API_config=('PRIVATE_API_KEY')
 
 class UserModel(db.Model):
     __tablename__="users"
