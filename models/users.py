@@ -1,6 +1,6 @@
-from flask.helpers import url_for
+from flask import request , url_for
 from db import db
-from flask import request
+from requests import Response,post
 from typing import Dict, Union
 userJSON = Dict[str,Union[str,str]]
 MAILGUN_DOMAIN=""
