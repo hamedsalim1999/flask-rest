@@ -40,12 +40,12 @@ class UserModel(db.Model):
         link = request.url_root[:-1]+ url_for('userconfirm',user_id=self.id)
         
         return post(
-            f"",
-            auth=("api",API_KEY),
-            data={
-                "form":f"{FROM_TITLE}<{FROM_EMAIL}>",
-                "to":self.email,
-                "subject":"Registerion confirmation",
-                "text":f"please click this link for active your account : {link}"
-            }
+        f"https://api.mailgun.net/v4/{address}/messages",
+        auth=("api", PRIVATE_API_KEY),
+        data={
+            "from": f"{FROM_TITLE}<{FROM_EMAIL}>",
+            "to":self.email,
+            "subject": "registration confirmation",
+            "text":f"plese clicl this linl {link}",
+              },
         )
