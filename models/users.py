@@ -2,12 +2,13 @@ from flask import request , url_for
 from db import db
 from requests import Response,post
 from typing import Dict, Union
+import os
 userJSON = Dict[str,Union[str,str]]
-MAILGUN_DOMAIN=""
-MAILGUN_API_KEY=""
-FROM_TITLE = ""
-FROM_EMAIL =""
 
+ADDRES=os.environ['ADDRES']
+FROM_TITLE=os.environ['FROM_TITLE']
+FROM_EMAIL =os.environ['FROM_EMAIL']
+PRIVATE_API_KEY=os.environ['PRIVATE_API_KEY']
 
 class UserModel(db.Model):
     __tablename__="users"
@@ -40,7 +41,7 @@ class UserModel(db.Model):
         link = request.url_root[:-1]+ url_for('userconfirm',user_id=self.id)
         
         return post(
-        f"https://api.mailgun.net/v4/{address}/messages",
+        f"https://api.mailgun.net/v3/{ADDRES}/messages",
         auth=("api", PRIVATE_API_KEY),
         data={
             "from": f"{FROM_TITLE}<{FROM_EMAIL}>",
