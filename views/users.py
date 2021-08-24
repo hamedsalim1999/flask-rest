@@ -7,8 +7,11 @@ import traceback
 class UserRegister(Resource):
     @classmethod
     def post(cls):
-        data = UserSchema().load(request.get_json())
-        user = UserModel.find_by_username(data)
+        
+     
+        user = UserSchema().load(request.get_json())
+        
+        print(user)
         if UserModel.find_by_username('username'):
             return {"MSG":"We have this user naem"}
         if UserModel.find_by_email('email'):
