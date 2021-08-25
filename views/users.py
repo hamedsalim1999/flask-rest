@@ -7,11 +7,7 @@ import traceback
 class UserRegister(Resource):
     @classmethod
     def post(cls):
-        
-     
         user = UserSchema().load(request.get_json())
-        
-        print(user)
         if UserModel.find_by_username('username'):
             return {"MSG":"We have this user naem"}
         if UserModel.find_by_email('email'):
@@ -19,6 +15,7 @@ class UserRegister(Resource):
         try:
             user.save_to_db()
             user.sendconfern_email()
+            
         except:
             traceback.print_exc()
             return {"msg":"filed to create user "},500
