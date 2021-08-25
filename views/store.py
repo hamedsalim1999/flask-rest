@@ -16,12 +16,12 @@ class Store(Resource):
     def post (cls,name:str):
         store = StoreModel.find_by_name(name)
         if store :
-            return {"msg":f"{Resource().dump(store)} already exists"},200
+            return {"msg":f"{StoreSchema().dump(store)} already exists"},200
 
         store = StoreModel(name)
         try:
             store.save_to_db()
-            return {"msg":f"item was crate {Resource().dump(store)}"},201
+            return {"msg":f"item was crate {StoreSchema().dump(store)}"},201
         except:
             return {"msg":"An error occurred inserting the item"},404
        
