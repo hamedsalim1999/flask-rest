@@ -10,7 +10,7 @@ userJSON = Dict[str,Union[str,str]]
 ADDRES=config('ADDRES')
 FROM_TITLE=config('FROM_TITLE')
 FROM_EMAIL =config('FROM_EMAIL')
-PRIVATE_API_config=('PRIVATE_API_KEY')
+PRIVATE_API=config('PRIVATE_API_KEY')
 
 class UserModel(db.Model):
     __tablename__="users"
@@ -46,7 +46,7 @@ class UserModel(db.Model):
         
         return post(
         f"https://api.mailgun.net/v3/{ADDRES}/messages",
-        auth=("api", PRIVATE_API_KEY),
+        auth=("api", PRIVATE_API),
         data={
             "from": f"{FROM_TITLE}<{FROM_EMAIL}>",
             "to":self.email,
