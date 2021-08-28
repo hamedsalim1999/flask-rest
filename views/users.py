@@ -41,8 +41,8 @@ class UserLogin(Resource):
 
     @classmethod
     def post(cls):
-        data = UserSchema().load(request.get_json())
-        user = UserModel.find_by_username(data,partial=("email",))
+        data = UserSchema().load(request.get_json(),partial=("email"))
+        user = UserModel.find_by_username(data.username)
         if user and data.password:
             if user.activate:
                 access_token = create_access_token(identity= user.id,fresh=True)
