@@ -8,9 +8,9 @@ class UserRegister(Resource):
     @classmethod
     def post(cls):
         user = UserSchema().load(request.get_json())
-        if UserModel.find_by_username('username'):
+        if UserModel.find_by_username(user.username):
             return {"MSG":"We have this user naem"}
-        if UserModel.find_by_email('email'):
+        if UserModel.find_by_email(user.email):
             return {"MSG":"We have this email"}
         try:
             user.save_to_db()
