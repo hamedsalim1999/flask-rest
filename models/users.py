@@ -1,17 +1,11 @@
 from flask import request , url_for
 from db import db
-from requests import Response,post
+from lib.mailgun import MailGun
 from typing import Dict, Union
 import os
 from decouple import config
 
 userJSON = Dict[str,Union[str,str]]
-
-ADDRES=config('ADDRES')
-FROM_TITLE=config('FROM_TITLE')
-FROM_EMAIL =config('FROM_EMAIL')
-PRIVATE_API=config('PRIVATE_API_KEY')
-
 class UserModel(db.Model):
     __tablename__="users"
     id = db.Column(db.Integer, primary_key=True)
@@ -43,14 +37,7 @@ class UserModel(db.Model):
       
     def sendconfern_email(self) -> None:
         link = request.url_root[:-1]+ url_for('userconfirm',user_id=self.id)
-        
-        return post(
-        f"https://api.mailgun.net/v3/{ADDRES}/messages",
-        auth=("api", PRIVATE_API),
-        data={
-            "from": f"{FROM_TITLE}<{FROM_EMAIL}>",
-            "to":self.email,
-            "subject": "registration confirmation",
-            "text":f"plese clicl this linl {link}",
-              },
-        )
+        subject = f"Registration confirmation"
+        text = f"plese click this link for confirm your registers {link} "
+        html = f"<html> <h1>plese click this link for confirm your registers {link} </h1></html>"
+        print([self.email],subject,text,html)
