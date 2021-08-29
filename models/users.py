@@ -40,4 +40,4 @@ class UserModel(db.Model):
         subject = f"Registration confirmation"
         text = f"plese click this link for confirm your registers {link} "
         html = f"<html> <h1>plese click this link for confirm your registers {link} </h1></html>"
-        print([self.email],subject,text,html)
+        return MailGun.send_email([self.email,] ,subject,text,html)
