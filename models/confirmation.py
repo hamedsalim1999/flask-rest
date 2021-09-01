@@ -26,4 +26,10 @@ class ConfirmationModel(db.Model):
             self.expire_at = int(datetime.now())
             self.save_to_db()
 
-        
+    def save_to_db(self)-> None:
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_from_db(self)-> None:
+        db.session.delete(self)
+        db.session.commit()
