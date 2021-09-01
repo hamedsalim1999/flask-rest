@@ -12,7 +12,7 @@ class UserModel(db.Model):
     username = db.Column(db.String(128), nullable=False, unique=True)
     email = db.Column(db.String(128), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
-    activate = db.Column(db.Boolean, default=False)
+    confirmation = db.relationsship("ConfirmationModel",lazy='dynamic', cascade="all, delete-orphan")
     def __init__(self, username,email,password):
         self.username = username
         self.email = email
