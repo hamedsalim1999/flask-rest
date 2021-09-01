@@ -18,3 +18,6 @@ class ConfirmationModel(db.Model):
     @classmethod
     def find_by_id(cls, id:int) -> "ConfirmationModel":
         return cls.query.filter_by(id=id).first()
+    @classmethod
+    def expired(self) -> bool:
+        return datetime.now() > self.expire_at
