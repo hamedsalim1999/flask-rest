@@ -21,3 +21,9 @@ class ConfirmationModel(db.Model):
     @classmethod
     def expired(self) -> bool:
         return datetime.now() > self.expire_at
+    def force_to_expire(self) -> None:
+        if not self.expired:
+            self.expire_at = int(datetime.now())
+            self.save_to_db()
+
+        
