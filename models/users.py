@@ -36,7 +36,7 @@ class UserModel(db.Model):
         db.session.commit()
       
     def sendconfern_email(self) -> None:
-        link = request.url_root[:-1]+ url_for('userconfirm',user_id=self.id)
+        link = request.url_root[:-1]+ url_for('confirmation',confirmation_id=self.most_recent_confirmation.id)
         subject = f"Registration confirmation"
         text = f"plese click this link for confirm your registers {link} "
         html = f"<html> <h1>plese click this link for confirm your registers {link} </h1></html>"
