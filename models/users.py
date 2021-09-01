@@ -13,10 +13,8 @@ class UserModel(db.Model):
     email = db.Column(db.String(128), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
     confirmation = db.relationsship("ConfirmationModel",lazy='dynamic', cascade="all, delete-orphan")
-    def __init__(self, username,email,password):
-        self.username = username
-        self.email = email
-        self.password = password
+
+   
     @classmethod
     def find_by_username(cls, username:str)-> "UserModel":
         return cls.query.filter_by(username=username).first()
