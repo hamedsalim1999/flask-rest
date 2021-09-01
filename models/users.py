@@ -4,7 +4,7 @@ from lib.mailgun import MailGun
 from typing import Dict, Union
 import os
 from decouple import config
-
+from models.confirmation import ConfirmationModel
 userJSON = Dict[str,Union[str,str]]
 class UserModel(db.Model):
     __tablename__="users"
@@ -14,7 +14,9 @@ class UserModel(db.Model):
     password = db.Column(db.String(128), nullable=False)
     confirmation = db.relationsship("ConfirmationModel",lazy='dynamic', cascade="all, delete-orphan")
 
-   
+    @property
+    def most_recent_confirmation(self) -> "ConfirmationModel":
+        return self.confirmation.order_by(db.desc(ConfirmationModel.expire_at)).first()
     @classmethod
     def find_by_username(cls, username:str)-> "UserModel":
         return cls.query.filter_by(username=username).first()
