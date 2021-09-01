@@ -15,4 +15,6 @@ class ConfirmationModel(db.Model):
         self.id = uuid4().hex
         self.expire_at=int(datetime.now()+timedelta(minutes=30))
         self.confirmed=False
-        
+    @classmethod
+    def find_by_id(cls, id:int) -> "ConfirmationModel":
+        return cls.query.filter_by(id=id).first()
