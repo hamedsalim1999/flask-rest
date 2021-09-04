@@ -3,6 +3,7 @@ from flask_restful import Resource
 from flask_jwt_extended import create_access_token,create_refresh_token,jwt_required
 from serializer.users import UserSchema 
 from flask import request
+from lib.mailgun import MailGunException
 import traceback
 class UserRegister(Resource):
     @classmethod
@@ -15,12 +16,15 @@ class UserRegister(Resource):
         try:
             user.save_to_db()
             user.sendconfern_email()
-            
+            return{"msg":"user successfully crate"},201
+        except MailGunException:
+            user.delete_from_db()
+            return {"msg":str(MailGunException)},500
         except:
             traceback.print_exc()
             return {"msg":"filed to create user "},500
             
-        return {"msg":"user was create"},201
+        
 
 class User(Resource):
 
