@@ -15,7 +15,10 @@ class MailGun:
     PRIVATE_API=config('PRIVATE_API_KEY')    
     @classmethod 
     def send_email(cls,email:List[str],subject:str,text:str,html:str) -> Response:
-        
+        if cls.PRIVATE_API is None:
+            raise MailGunException("field to use API key")
+        if cls.ADDRES is None:
+            raise MailGunException("failed to load mail gun domain")
         return post(
         f"https://api.mailgun.net/v3/{cls.ADDRES}/messages",
         auth=("api", cls.PRIVATE_API),
