@@ -1,7 +1,8 @@
 from flask_restful import Resource
 from models.confirmation import ConfirmationModel
-
-
+from models.users import UserModel
+from datetime import datetime
+from serializer.confirmation import ConfirmationSchema
 class Confirmation(Resource):
     @classmethod
     def get(cls,confirmation_id : str):
@@ -23,8 +24,18 @@ class Confirmation(Resource):
 
 class ConfirmationByUser(Resource):
     @classmethod
-    def get(cls):
-        pass
+    def get(cls,user_id:int):
+        user = UserModel.find_by_id(user_id)
+        if not user:
+            return {"msg":"user not found"}
+        return{
+            "current_time":datetime.now(),
+            "confirmation":[
+                ConfirmationSchema.dump(i)
+                for i in user.confirmation.order_by(ConfirmationModel.expire_at)
+            ],
+        },200
+        
     
     
     @classmethod
