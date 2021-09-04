@@ -3,6 +3,8 @@ from models.confirmation import ConfirmationModel
 from models.users import UserModel
 from datetime import datetime
 from serializer.confirmation import ConfirmationSchema
+from lib.mailgun import MailGunException
+import traceback
 class Confirmation(Resource):
     @classmethod
     def get(cls,confirmation_id : str):
@@ -39,5 +41,20 @@ class ConfirmationByUser(Resource):
     
     
     @classmethod
-    def post(cls):
-        pass
+    def post(cls,user_id:int):
+        user = UserModel.find_by_id(user_id)
+        if not user:
+            return{"msg":"user not found"},404
+        try:
+            confirmation = user.most_recent_confirmation
+            if confirmation:
+                if confirmation.confirmed:
+                    return {"msg":"already confirmed"},400
+                confirmation.force_to_expire()
+            new_confirmation = ConfirmationModel(user_id)
+            new_confirmation.save_to_db()
+            user.sendconfern_email()
+        except:
+            traceback.print_exc()
+            return {"msg":"failed to confirmation email"},500
+        
