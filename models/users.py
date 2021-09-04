@@ -12,7 +12,7 @@ class UserModel(db.Model):
     username = db.Column(db.String(128), nullable=False, unique=True)
     email = db.Column(db.String(128), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
-    confirmation = db.relationsship("ConfirmationModel",lazy='dynamic', cascade="all, delete-orphan")
+    confirmation = db.relationship("ConfirmationModel",lazy='dynamic', cascade="all, delete-orphan")
 
     @property
     def most_recent_confirmation(self) -> "ConfirmationModel":
