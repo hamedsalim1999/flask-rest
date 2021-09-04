@@ -31,7 +31,7 @@ class ConfirmationByUser(Resource):
         return{
             "current_time":datetime.now(),
             "confirmation":[
-                ConfirmationSchema.dump(i)
+                ConfirmationSchema().dump(i)
                 for i in user.confirmation.order_by(ConfirmationModel.expire_at)
             ],
         },200
