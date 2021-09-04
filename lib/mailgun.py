@@ -3,6 +3,10 @@ from requests import post
 from typing import List
 from decouple import config
 from flask import request , url_for
+
+class MailGunException(Exception):
+    def __init__(self, message) -> None:
+        super().__init__(message)
 class MailGun:
  
     ADDRES=config('ADDRES')
