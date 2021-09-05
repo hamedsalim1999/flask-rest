@@ -8,6 +8,7 @@ from db import db
 from ma import ma
 from mail import mail
 from marshmallow import ValidationError
+from views.confirmation import Confirmation,ConfirmationByUser
 app = Flask(__name__)
 api = Api(app)
 app.config['SECRET_KEY'] ='thisissecrettests'
@@ -38,6 +39,8 @@ api.add_resource(StoreList,'/stores')
 api.add_resource(User,'/user/<int:user_id>')
 api.add_resource(UserLogin,'/login')
 api.add_resource(UserConfirm,'/userconfern/<int:user_id>')
+api.add_resource(Confirmation,'/confirmation/<string:confirmation_id>')
+api.add_resource(ConfirmationByUser,'/userconfirmation/<int:user_id>')
 
 if __name__ == '__main__':
     ma.init_app(app)
