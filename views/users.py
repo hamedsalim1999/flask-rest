@@ -4,6 +4,7 @@ from flask_jwt_extended import create_access_token,create_refresh_token,jwt_requ
 from serializer.users import UserSchema 
 from flask import request
 from lib.mailgun import MailGunException
+from models.confirmation import ConfirmationModel
 import traceback
 class UserRegister(Resource):
     @classmethod
@@ -15,6 +16,7 @@ class UserRegister(Resource):
             return {"MSG":"We have this email"}
         try:
             user.save_to_db()
+            ConfirmationModel(user.id).save_to_db()
             user.sendconfern_email()
             return{"msg":"user successfully crate"},201
         except MailGunException:
