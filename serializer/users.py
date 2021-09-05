@@ -1,5 +1,6 @@
 from models.users import UserModel
 from ma import ma
+from marshmallow import pre_dump
 class UserSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
