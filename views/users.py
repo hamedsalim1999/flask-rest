@@ -49,8 +49,10 @@ class UserLogin(Resource):
     def post(cls):
         data = UserSchema().load(request.get_json(),partial=("email"))
         user = UserModel.find_by_username(data.username)
+        
         if user and data.password:
-            if user.activate:
+            confirmation = user.most_recent_confirmation
+            if confirmation and confirmation.confirmed:
                 access_token = create_access_token(identity= user.id,fresh=True)
                 refresh_token = create_refresh_token(user.id)
                 return{
