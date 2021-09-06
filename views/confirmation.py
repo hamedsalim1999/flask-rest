@@ -12,7 +12,7 @@ class Confirmation(Resource):
         if not confirmation:
             return{"msg":"not found"},404
         
-        if confirmation.expired:
+        if not confirmation.expired:
             return {"msg":"this message was expired"},400
         
         if confirmation.confirmed:
