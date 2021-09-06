@@ -13,7 +13,7 @@ class ConfirmationModel(db.Model):
         super().__init__(**kwargs)
         self.user_id = user_id
         self.id = uuid4().hex
-        self.expire_at=str(datetime.now()+timedelta(minutes=30))
+        self.expire_at=datetime.now()+timedelta(minutes=30)
         self.confirmed=False
     @classmethod
     def find_by_id(cls, id:int) -> "ConfirmationModel":
