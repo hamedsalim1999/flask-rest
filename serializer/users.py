@@ -4,7 +4,7 @@ from marshmallow import pre_dump
 class UserSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
-        load_only=('password',)
+        load_only=('password  ',)
         dump_only=('id','confirmation')
         load_instance = True
         include_relationships = True
